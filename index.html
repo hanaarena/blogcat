@@ -28,39 +28,138 @@
         </ul>
       </header>
       <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h1>
+<a name="xb%E7%B3%BB%E5%88%97%E7%AC%AC%E4%BA%8C%E5%BC%B9---%E8%88%AA%E6%B5%B7%E8%AE%B0%E5%BD%95-blogcat" class="anchor" href="#xb%E7%B3%BB%E5%88%97%E7%AC%AC%E4%BA%8C%E5%BC%B9---%E8%88%AA%E6%B5%B7%E8%AE%B0%E5%BD%95-blogcat"><span class="octicon octicon-link"></span></a>XB系列第二弹 - 航海记录 BlogCat</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>这是一份关于个人「项目」xbp2.apk开发过程的记录
+<br></p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<h3>
+<a name="%E7%BB%BC%E8%BF%B0" class="anchor" href="#%E7%BB%BC%E8%BF%B0"><span class="octicon octicon-link"></span></a>综述</h3>
+
+<ul>
+<li>项目名:<code>xbp2</code> = XB Project two(base Android)</li>
+<li>
+<code>xbp2</code>的目标是做一个使用<a href="http://developer.android.com/reference/android/support/v4/view/ViewPager.html" title="ViewPager"><code>ViewPager</code></a>开发的多屏应用并集合多种功能</li>
+<li>目前的计划是拥有三屏<br><br><br><br>
+### 实现功能 </li>
+<li>Tab one:可定制个人课程(表)。鉴于已有的很多App都是通过社交账号授权，然后通过社交关系匹配导入数据，很自动化。<code>xbp2</code>做的是手动(别手懒~)，这东西没必要被人又挖了一次数据,try to offline:)</li>
+<li>Tab two:模仿<strong>Catch Note</strong>的TODO List</li>
+<li>Tab three:加入之前做到半成品的XB(<a href="https://github.com/hanaarena/XB">传送门</a>)
+<br><br>
+### 进展  (Oct.19)</li>
+<li>Tab one 基本完成</li>
+<li>Tab two 提醒功能√ ···</li>
+<li>使用<code>WebView</code>包装
+<br>
+----------
+<br>
+### blogcat
+##### Tab one
+Android 官方<a href="http://developer.android.com/reference/android/support/v4/view/ViewPager.html" title="ViewPager"><code>ViewPager</code></a>文档的example推荐用 <code>TabsAdapter</code> 来做<code>ViewPager</code>的容器，但是在用<code>new TabsAdapter</code>的 <code>.addTab()</code> 方法时我不知道怎麽用<code>TabListener</code>来监听滑到当前Tab的方法,只能做一些视图的查看。
+<pre>
+protected void onCreate(Bundle savedInstanceState) { 
+mViewPager = new ViewPager(this);
+....
+setContentView(mViewPager);
+....
+mTabsAdapter = new TabsAdapter(this, mViewPager);
+}
+</pre>
+&gt;效果如图：<img src="https://raw.github.com/hanaarena/blogcat/gh-pages/images/2013-10-19_121158.png" alt="">
+</li>
+</ul><p>所以我选择了另一种方法List来做每一屏(Tab)的容器:</p>
+
+<pre>
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    requestWindowFeature(Window.FEATURE_NO_TITLE);
+    setContentView(R.layout.activity_main); 
+    
+    viewPager = (ViewPager) this.findViewById(R.id.viewpager);
+    pagerTitleStrip = (PagerTitleStrip) this.findViewById(R.id.pagertitile);
+    pagerTitleStrip.setTextColor(Color.WHITE);
+
+    View view1 = LayoutInflater.from(MainActivity.this).inflate(
+                R.layout.tab1, null);
+    ....
+
+    list = new ArrayList();
+    list.add(view1);
+    ...
+}
+</pre>
+
+<blockquote>
+<p>效果如图：<img src="https://raw.github.com/hanaarena/blogcat/gh-pages/images/2013-10-19_121507.png" alt=""></p>
+</blockquote>
+
+<p>在后者的方法能直接实现对每一屏(Tab)中各控件的事件监听，而无需去实现<code>TabsListener</code>之类的监听接口.</p>
+
+<h5>
+<a name="tab-two" class="anchor" href="#tab-two"><span class="octicon octicon-link"></span></a>Tab two</h5>
+
+<p>第二屏中通过点击Button控件调用<code>Time/DatePickerDialog</code>来进行时间/日期的选择。(<a href="http://developer.android.com/guide/topics/ui/controls/pickers.html">More about <code>Picker</code></a>)</p>
+
+<p>Tab2.xml:</p>
+
+<pre><code>&lt;Button
+    android:id="@+id/button1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    ······
+    android:text="@string/btn_date" 
+    android:onClick="showdateTime" /&gt;
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>在实现类文件中实现<code>onClick</code>事件的方法(这里指<code>showdateTime</code>):</p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<pre><code>public void showdateTime(View v)
+{
+    // 创建一个TimePickerDialog实例，并把它显示出来。
+    new TimePickerDialog(MainActivity.this,
+        0, // 绑定监听器
+        new TimePickerDialog.OnTimeSetListener()
+        {
+            @Override
+            public void onTimeSet(TimePicker tp, int hourOfDay,
+                int minute)
+            {
+                 myCalendar.setTimeInMillis(System.currentTimeMillis());        //设置Calendar对象
+                 myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);        //设置闹钟小时数
+                 myCalendar.set(Calendar.MINUTE, minute);            //设置闹钟的分钟数
+                 myCalendar.set(Calendar.SECOND, 0);                //设置闹钟的秒数
+                 myCalendar.set(Calendar.MILLISECOND, 0);            //设置闹钟的毫秒数
+                 Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);    //创建Intent对象
+                 PendingIntent pi = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);    //创建PendingIntent          
+                 // 获取AlarmManager对象
+                 aManager = (AlarmManager) getSystemService(ALARM_SERVICE);     
+                 aManager.set(AlarmManager.RTC_WAKEUP, myCalendar.getTimeInMillis(), pi);        //设置闹钟
+                 //aManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pi);        //设置当前时间闹钟
+                 Toast.makeText(MainActivity.this, "闹钟设置成功", Toast.LENGTH_SHORT).show();//提示用户
+            }
+        }, myCalendar.get(Calendar.HOUR_OF_DAY)
+        , myCalendar.get(Calendar.MINUTE), true)
+        .show();                
+}
+</code></pre>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p><strong>Waring：</strong></p>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<pre><code>myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay); 
+</code></pre>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>与</p>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<pre><code>myCalendar.set(Calendar.HOUR, hourOfDay); 
+</code></pre>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>的区别，如果用HOUR的话只能识别12小时制(虽然能选择12点过后的钟点,但是并不能实现定时闹钟功能)。应使用HOUR_OF _DAY</p>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<p>（P.s. 调用日期Picker同理~）</p>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-
-<p><img class="emoji" title=":flushed:" alt=":flushed:" src="https://github.global.ssl.fastly.net/images/icons/emoji/flushed.png" height="20" width="20" align="absmiddle"></p>
+<p>下一步要先实现的是自定义<code>Toast</code>内容，即将<code>EditText</code>中的内容传输到<code>Toast</code>控件中，并用<code>SharedPreferenced</code>保存。<br>
+然后再调用<code>Noitification</code>.(<a href="http://developer.android.com/guide/topics/ui/notifiers/notifications.html">More about <code>Notification</code></a>)</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/hanaarena">hanaarena</a></p>
@@ -68,6 +167,16 @@ $ git checkout gh-pages
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-30427812");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
   </body>
 </html>
