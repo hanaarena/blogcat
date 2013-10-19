@@ -41,34 +41,46 @@
 <li>项目名:<code>xbp2</code> = XB Project two(base Android)</li>
 <li>
 <code>xbp2</code>的目标是做一个使用<a href="http://developer.android.com/reference/android/support/v4/view/ViewPager.html" title="ViewPager"><code>ViewPager</code></a>开发的多屏应用并集合多种功能</li>
-<li>目前的计划是拥有三屏<br><br><br><br>
-### 实现功能 </li>
+<li>目前的计划是拥有三屏<br>
+</li>
+</ul><h3>
+<a name="%E5%AE%9E%E7%8E%B0%E5%8A%9F%E8%83%BD" class="anchor" href="#%E5%AE%9E%E7%8E%B0%E5%8A%9F%E8%83%BD"><span class="octicon octicon-link"></span></a>实现功能</h3>
+
+<ul>
 <li>Tab one:可定制个人课程(表)。鉴于已有的很多App都是通过社交账号授权，然后通过社交关系匹配导入数据，很自动化。<code>xbp2</code>做的是手动(别手懒~)，这东西没必要被人又挖了一次数据,try to offline:)</li>
 <li>Tab two:模仿<strong>Catch Note</strong>的TODO List</li>
 <li>Tab three:加入之前做到半成品的XB(<a href="https://github.com/hanaarena/XB">传送门</a>)
 <br><br>
-### 进展  (Oct.19)</li>
+</li>
+</ul><h3>
+<a name="%E8%BF%9B%E5%B1%95--oct19" class="anchor" href="#%E8%BF%9B%E5%B1%95--oct19"><span class="octicon octicon-link"></span></a>进展  (Oct.19)</h3>
+
+<ul>
 <li>Tab one 基本完成</li>
 <li>Tab two 提醒功能√ ···</li>
 <li>使用<code>WebView</code>包装
 <br>
-----------
-<br>
-### blogcat
-##### Tab one
-Android 官方<a href="http://developer.android.com/reference/android/support/v4/view/ViewPager.html" title="ViewPager"><code>ViewPager</code></a>文档的example推荐用 <code>TabsAdapter</code> 来做<code>ViewPager</code>的容器，但是在用<code>new TabsAdapter</code>的 <code>.addTab()</code> 方法时我不知道怎麽用<code>TabListener</code>来监听滑到当前Tab的方法,只能做一些视图的查看。
-<pre>
-protected void onCreate(Bundle savedInstanceState) { 
-mViewPager = new ViewPager(this);
-....
-setContentView(mViewPager);
-....
-mTabsAdapter = new TabsAdapter(this, mViewPager);
-}
-</pre>
-&gt;效果如图：<img src="https://raw.github.com/hanaarena/blogcat/gh-pages/images/2013-10-19_121158.png" alt="">
 </li>
-</ul><p>所以我选择了另一种方法List来做每一屏(Tab)的容器:</p>
+</ul><hr><h3>
+<a name="blogcat" class="anchor" href="#blogcat"><span class="octicon octicon-link"></span></a>blogcat</h3>
+
+<h4>
+<a name="tab-one" class="anchor" href="#tab-one"><span class="octicon octicon-link"></span></a>Tab one</h4>
+
+<p>Android 官方<a href="http://developer.android.com/reference/android/support/v4/view/ViewPager.html" title="ViewPager"><code>ViewPager</code></a>文档的example推荐用 <code>TabsAdapter</code> 来做<code>ViewPager</code>的容器，但是在用<code>new TabsAdapter</code>的 <code>.addTab()</code> 方法时我不知道怎麽用<code>TabListener</code>来监听滑到当前Tab的方法,只能做一些视图的查看。
+    </p><pre>
+ protected void onCreate(Bundle savedInstanceState) { 
+    mViewPager = new ViewPager(this);
+    ....
+    setContentView(mViewPager);
+    ....
+    mTabsAdapter = new TabsAdapter(this, mViewPager);
+ }
+ </pre>
+
+<p>效果如图：<img src="https://raw.github.com/hanaarena/blogcat/gh-pages/images/2013-10-19_121158.png" alt=""></p>
+
+<p>所以我选择了另一种方法List来做每一屏(Tab)的容器:</p>
 
 <pre>
 protected void onCreate(Bundle savedInstanceState) {
@@ -90,14 +102,12 @@ protected void onCreate(Bundle savedInstanceState) {
 }
 </pre>
 
-<blockquote>
-<p>效果如图：<img src="https://raw.github.com/hanaarena/blogcat/gh-pages/images/2013-10-19_121507.png" alt=""></p>
-</blockquote>
+<p>效果如图：<br><img src="https://raw.github.com/hanaarena/blogcat/gh-pages/images/2013-10-19_121507.png" alt=""></p>
 
 <p>在后者的方法能直接实现对每一屏(Tab)中各控件的事件监听，而无需去实现<code>TabsListener</code>之类的监听接口.</p>
 
-<h5>
-<a name="tab-two" class="anchor" href="#tab-two"><span class="octicon octicon-link"></span></a>Tab two</h5>
+<h4>
+<a name="tab-two" class="anchor" href="#tab-two"><span class="octicon octicon-link"></span></a>Tab two</h4>
 
 <p>第二屏中通过点击Button控件调用<code>Time/DatePickerDialog</code>来进行时间/日期的选择。(<a href="http://developer.android.com/guide/topics/ui/controls/pickers.html">More about <code>Picker</code></a>)</p>
 
