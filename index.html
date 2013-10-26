@@ -168,8 +168,101 @@ protected void onCreate(Bundle savedInstanceState) {
 
 <p>（P.s. 调用日期Picker同理~）</p>
 
-<p>下一步要先实现的是自定义<code>Toast</code>内容，即将<code>EditText</code>中的内容传输到<code>Toast</code>控件中，并用<code>SharedPreferenced</code>保存。<br>
-然后再调用<code>Noitification</code>.(<a href="http://developer.android.com/guide/topics/ui/notifiers/notifications.html">More about <code>Notification</code></a>)</p>
+<del>下一步要先实现的是自定义`Toast`内容，即将`EditText`中的内容传输到`Toast`控件中，并用`SharedPreferenced`保存。<br></del>
+
+<p><strong>调用<code>Noitification.Builder</code></strong>(<a href="http://developer.android.com/reference/android/app/Notification.Builder.html">More about <code>Notification.Builder</code></a>)</p>
+
+<p>顶部显示notification，下拉查看自定义的提醒内容。这里使用<code>JSP</code>的<code>Session</code>来代替<code>Intent.putExtra()</code>.   //改天用putExtra改写</p>
+
+<p>Session.java:</p>
+
+<pre>
+public class Session {
+
+    @SuppressWarnings("unchecked")
+    private Map _objectContainer;
+
+    private static Session session;
+
+    // Attention here, DO NOT USE keyword 'new' to create this object.
+    // Instead, use getSession method.
+    @SuppressWarnings("unchecked")
+    private Session() {
+        _objectContainer = new HashMap();
+    }
+
+    public static Session getSession() {
+
+        if (session == null) {
+            session = new Session();
+            return session;
+        } else {
+            return session;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void put(Object key, Object value) {
+
+        _objectContainer.put(key, value);
+    }
+
+    public Object get(Object key) {
+
+        return _objectContainer.get(key);
+    }
+
+    public void cleanUpSession() {
+        _objectContainer.clear();
+    }
+
+    public void remove(Object key) {
+        _objectContainer.remove(key);
+    }
+}
+</pre>
+
+<p>使用Notification.Builder实现通知栏功能：</p>
+
+<pre><code>    Intent notificationIntent = new Intent(context, SecondActivity.class);
+    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+    NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+    Notification.Builder builder = new Notification.Builder(context);
+    builder.setContentIntent(contentIntent)
+                .setSmallIcon(R.drawable.heart)
+                .setTicker("Helo Noti")
+                .setWhen(System.currentTimeMillis())
+                .setAutoCancel(true)
+                .setContentTitle("Helo Noti2")
+                .setContentText(notiText);
+    Notification n = builder.build();       
+    nm.notify(1, n)
+</code></pre>
+
+<p>(以下包含在AlarmReceive.java中，AlarmReciver继承<code>BroadcastReceiver</code>。在MainActivity.java中，设定闹钟到点时 <code>PendingIntent pi = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);)</code>,而不是使用<code>.getActivity()</code> )</p>
+
+<p><strong>Tips：</strong></p>
+
+<p>①</p>
+
+<p>存储数据：</p>
+
+<pre><code>text = (EditText)view2.findViewById(R.id.text);
+Session session = Session.getSession();
+String str2 = text.getText().toString();    //获取EditText中输入的内容
+session.put("str", str2);
+</code></pre>
+
+<p>读取数据：</p>
+
+<pre><code>Session session = Session.getSession();
+session.get("str");
+</code></pre>
+
+<p>②</p>
+
+<p>Eclipse报错 <strong>error opening trace file: No such file or directory (2)</strong>,一般是AndroidManifest.xml中有出错.</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/hanaarena">hanaarena</a></p>
