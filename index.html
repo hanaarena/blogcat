@@ -41,46 +41,34 @@
 <li>项目名:<code>xbp2</code> = XB Project two(base Android)</li>
 <li>
 <code>xbp2</code>的目标是做一个使用<a href="http://developer.android.com/reference/android/support/v4/view/ViewPager.html" title="ViewPager"><code>ViewPager</code></a>开发的多屏应用并集合多种功能</li>
-<li>目前的计划是拥有三屏<br>
-</li>
-</ul><h3>
-<a name="%E5%AE%9E%E7%8E%B0%E5%8A%9F%E8%83%BD" class="anchor" href="#%E5%AE%9E%E7%8E%B0%E5%8A%9F%E8%83%BD"><span class="octicon octicon-link"></span></a>实现功能</h3>
-
-<ul>
+<li>目前的计划是拥有三屏<br><br><br><br>
+### 实现功能 </li>
 <li>Tab one:可定制个人课程(表)。鉴于已有的很多App都是通过社交账号授权，然后通过社交关系匹配导入数据，很自动化。<code>xbp2</code>做的是手动(别手懒~)，这东西没必要被人又挖了一次数据,try to offline:)</li>
 <li>Tab two:模仿<strong>Catch Note</strong>的TODO List</li>
 <li>Tab three:加入之前做到半成品的XB(<a href="https://github.com/hanaarena/XB">传送门</a>)
 <br><br>
-</li>
-</ul><h3>
-<a name="%E8%BF%9B%E5%B1%95--oct19" class="anchor" href="#%E8%BF%9B%E5%B1%95--oct19"><span class="octicon octicon-link"></span></a>进展  (Oct.19)</h3>
-
-<ul>
+### 进展  (Oct.31)</li>
 <li>Tab one 基本完成</li>
-<li>Tab two 提醒功能√ ···</li>
-<li>使用<code>WebView</code>包装
+<li>Tab two 时间提醒功能√ 日期提醒功能√(device关机后失效，目测是没有写进数据库之类的) 自定义提醒内容至Notification√   ···</li>
+<li>使用<code>WebView</code>包装√
 <br>
+----------
+<br>
+### blogcat
+##### Tab one
+Android 官方<a href="http://developer.android.com/reference/android/support/v4/view/ViewPager.html" title="ViewPager"><code>ViewPager</code></a>文档的example推荐用 <code>TabsAdapter</code> 来做<code>ViewPager</code>的容器，但是在用<code>new TabsAdapter</code>的 <code>.addTab()</code> 方法时我不知道怎麽用<code>TabListener</code>来监听滑到当前Tab的方法,只能做一些视图的查看。
+  <pre>
+protected void onCreate(Bundle savedInstanceState) { 
+  mViewPager = new ViewPager(this);
+  ....
+  setContentView(mViewPager);
+  ....
+  mTabsAdapter = new TabsAdapter(this, mViewPager);
+}
+</pre>
+&gt;效果如图：<img src="https://raw.github.com/hanaarena/blogcat/gh-pages/images/2013-10-19_121158.png" alt="">
 </li>
-</ul><hr><h3>
-<a name="blogcat" class="anchor" href="#blogcat"><span class="octicon octicon-link"></span></a>blogcat</h3>
-
-<h4>
-<a name="tab-one" class="anchor" href="#tab-one"><span class="octicon octicon-link"></span></a>Tab one</h4>
-
-<p>Android 官方<a href="http://developer.android.com/reference/android/support/v4/view/ViewPager.html" title="ViewPager"><code>ViewPager</code></a>文档的example推荐用 <code>TabsAdapter</code> 来做<code>ViewPager</code>的容器，但是在用<code>new TabsAdapter</code>的 <code>.addTab()</code> 方法时我不知道怎麽用<code>TabListener</code>来监听滑到当前Tab的方法,只能做一些视图的查看。
-    </p><pre>
- protected void onCreate(Bundle savedInstanceState) { 
-    mViewPager = new ViewPager(this);
-    ....
-    setContentView(mViewPager);
-    ....
-    mTabsAdapter = new TabsAdapter(this, mViewPager);
- }
- </pre>
-
-<p>效果如图：<img src="https://raw.github.com/hanaarena/blogcat/gh-pages/images/2013-10-19_121158.png" alt=""></p>
-
-<p>所以我选择了另一种方法List来做每一屏(Tab)的容器:</p>
+</ul><p>所以我选择了另一种方法List来做每一屏(Tab)的容器:</p>
 
 <pre>
 protected void onCreate(Bundle savedInstanceState) {
@@ -102,12 +90,14 @@ protected void onCreate(Bundle savedInstanceState) {
 }
 </pre>
 
-<p>效果如图：<br><img src="https://raw.github.com/hanaarena/blogcat/gh-pages/images/2013-10-19_121507.png" alt=""></p>
+<blockquote>
+<p>效果如图：<img src="https://raw.github.com/hanaarena/blogcat/gh-pages/images/2013-10-19_121507.png" alt=""></p>
+</blockquote>
 
 <p>在后者的方法能直接实现对每一屏(Tab)中各控件的事件监听，而无需去实现<code>TabsListener</code>之类的监听接口.</p>
 
-<h4>
-<a name="tab-two" class="anchor" href="#tab-two"><span class="octicon octicon-link"></span></a>Tab two</h4>
+<h5>
+<a name="tab-two" class="anchor" href="#tab-two"><span class="octicon octicon-link"></span></a>Tab two</h5>
 
 <p>第二屏中通过点击Button控件调用<code>Time/DatePickerDialog</code>来进行时间/日期的选择。(<a href="http://developer.android.com/guide/topics/ui/controls/pickers.html">More about <code>Picker</code></a>)</p>
 
@@ -168,7 +158,7 @@ protected void onCreate(Bundle savedInstanceState) {
 
 <p>（P.s. 调用日期Picker同理~）</p>
 
-<del>下一步要先实现的是自定义`Toast`内容，即将`EditText`中的内容传输到`Toast`控件中，并用`SharedPreferenced`保存。<br></del>
+<hr><del>下一步要先实现的是自定义`Toast`内容，即将`EditText`中的内容传输到`Toast`控件中，并用`SharedPreferenced`保存。<br></del>
 
 <p><strong>调用<code>Noitification.Builder</code></strong>(<a href="http://developer.android.com/reference/android/app/Notification.Builder.html">More about <code>Notification.Builder</code></a>)</p>
 
@@ -222,7 +212,7 @@ public class Session {
 }
 </pre>
 
-<p>使用Notification.Builder实现通知栏功能：</p>
+<hr><p>使用Notification.Builder实现通知栏功能：</p>
 
 <pre><code>    Intent notificationIntent = new Intent(context, SecondActivity.class);
     PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
@@ -248,7 +238,7 @@ public class Session {
 
 <p>存储数据：</p>
 
-<pre><code>text = (EditText)view2.findViewById(R.id.text);
+<pre><code>text = (EditText)view2.findViewById(R.id.text); //注意：view2！
 Session session = Session.getSession();
 String str2 = text.getText().toString();    //获取EditText中输入的内容
 session.put("str", str2);
@@ -263,6 +253,163 @@ session.get("str");
 <p>②</p>
 
 <p>Eclipse报错 <strong>error opening trace file: No such file or directory (2)</strong>,一般是AndroidManifest.xml中有出错.</p>
+
+<hr><p>使用Dialog重写显示时间、日期选择的方法：</p>
+
+<p>即用<code>DatePickerDialog</code> &amp; <code>TimePickerDialog</code>来显示日期/时间{弹出框}</p>
+
+<pre><code>//Date Picker
+class showDatePicker implements OnClickListener {
+
+    @Override
+    public void onClick(View v) {
+        final Calendar c = Calendar.getInstance();
+        currentDate = Calendar.getInstance();
+        int mYear = c.get(Calendar.YEAR);
+        int mMonth = c.get(Calendar.MONTH);
+        int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        Dialog dialog = new DatePickerDialog(MainActivity.this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear,
+                            int dayOfMonth) {
+                        String date = "";
+                        date += year;
+                        if(monthOfYear &lt; 9) {
+                            date += "-0" + (monthOfYear+1);
+                        } else {
+                            date += "-" + (monthOfYear+1);
+                        }
+                        if(dayOfMonth &lt; 10) {
+                            date += "-0" + dayOfMonth;
+                        } else {
+                            date += "-" + dayOfMonth;
+                        }
+                        dateView.setText(date);                 
+                        c.getTimeInMillis();
+                        c.set(Calendar.YEAR, year);
+                        c.set(Calendar.MONTH, monthOfYear);
+                        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        //Selected Date was less than system Date
+                        if(currentDate.getTimeInMillis() &gt; c.getTimeInMillis()) {
+                            Toast.makeText(MainActivity.this, "不能小于当前日期！",Toast.LENGTH_SHORT).show();
+                            final Calendar currentTime = Calendar.getInstance();
+                            final int mYear2 = currentTime.get(Calendar.YEAR);
+                            final int mMonth2 = currentTime.get(Calendar.MONTH);
+                            final int mDay2 = currentTime.get(Calendar.DAY_OF_MONTH);
+                            String tempDate2 = mYear2 + "-" + format(mMonth2+1) + "-" + format(mDay2);
+                            dateView.setText(tempDate2);
+                        }
+                        myCalendar.set(Calendar.YEAR, year);
+                        myCalendar.set(Calendar.MONTH, monthOfYear);
+                        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    }
+                }, mYear, mMonth, mDay);
+        dialog.show();
+    }       
+}
+
+//Time Picker
+class showTimePicker implements OnClickListener {
+
+    @Override
+    public void onClick(View v) {
+        final Calendar c = Calendar.getInstance();
+        currentTime = Calendar.getInstance();
+        final int mHour = c.get(Calendar.HOUR_OF_DAY);
+        final int mMinute = c.get(Calendar.MINUTE);
+
+        Dialog dialog = new TimePickerDialog(MainActivity.this,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        String time = "";
+                        if(hourOfDay &lt; 10) {
+                            time = "0" + hourOfDay;
+                        } else {
+                            time = hourOfDay + "";
+                        }
+                        if(minute &lt; 10) {
+                            time += " : 0" + minute;
+                        } else {
+                            time += " : " + minute;
+                        }
+                        timeView.setText(time);
+                        //Selected Time
+                        myCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        myCalendar.set(Calendar.MINUTE, minute);
+                        myCalendar.set(Calendar.SECOND, 0);
+                        myCalendar.set(Calendar.MILLISECOND, 0);
+                        //IF Selected Time was less than the syetem Time
+                        if(myCalendar.getTimeInMillis() &lt; currentTime.getTimeInMillis()) {
+                            myCalendar.set(Calendar.DAY_OF_YEAR, myCalendar.get(Calendar.DAY_OF_YEAR)+1);
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.add(Calendar.DATE, 1);
+                            int y = calendar.get(Calendar.YEAR);
+                            int m = calendar.get(Calendar.MONTH);
+                            int d = calendar.get(Calendar.DAY_OF_MONTH);
+                            String date2 = "";
+                            date2 += date2 +y;
+                            if(m &lt;9) {
+                                date2 += "-0" + (m+1);
+                            } else {
+                                date2 += "-" +(m+1);
+                            }
+                            if(d &lt; 10) {
+                                date2 += "-0" + d;
+                            } else {
+                                date2 += "-" + d;
+                            }
+                            dateView.setText(date2);
+                        }
+                    }
+                }, mHour, mMinute, true);
+        dialog.show();
+    }   
+</code></pre>
+
+<hr><h5>
+<a name="tab-three" class="anchor" href="#tab-three"><span class="octicon octicon-link"></span></a>Tab three</h5>
+
+<pre><code>    //WebView
+    myWebView = (WebView)view3.findViewById(R.id.webview);
+    myWebView.loadUrl("http://lanzc.com/wb"); //跳转到微博页面
+    myWebView.setWebViewClient(new WebViewClient()); //在WebView中点击链接不另外跳转，在WebView page中打开
+    WebSettings webSettings = myWebView.getSettings();
+    webSettings.setJavaScriptEnabled(true);
+</code></pre>
+
+<h5>
+<a name="%E5%85%B3%E4%BA%8Ewebview%E4%B8%ADback-button%E4%BA%8B%E4%BB%B6" class="anchor" href="#%E5%85%B3%E4%BA%8Ewebview%E4%B8%ADback-button%E4%BA%8B%E4%BB%B6"><span class="octicon octicon-link"></span></a>关于WebView中back button事件</h5>
+
+<p>否则···按返回键将直接跳出Activity···</p>
+
+<pre><code>@Override
+public boolean onKeyDown(int keyCode, KeyEvent event) {
+    // Check if the key event was the Back button and if there's history
+    if ((keyCode == KeyEvent.KEYCODE_BACK) &amp;&amp; myWebView.canGoBack()) {
+        myWebView.goBack();
+        return true;
+    }
+    // If it wasn't the Back key or there's no web page history, bubble up to the default
+    // system behavior (probably exit the activity)
+    return super.onKeyDown(keyCode, event);
+}
+</code></pre>
+
+<hr><h2>
+<a name="end" class="anchor" href="#end"><span class="octicon octicon-link"></span></a>END</h2>
+
+<p>基本的功能都实现得差不多，然后，xbp2先做到这里吧。 </p>
+
+<p><em>To be continued···</em></p>
+
+<p>以上。</p>
+
+<p>Oct.31 2013@lanz</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/hanaarena">hanaarena</a></p>
